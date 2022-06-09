@@ -1,12 +1,15 @@
 #' event_burstiness
 #'
-#' This function returns the burstiness coefficient for each of the
-#' unique codes in a series. The series must be event-based; see
-#' time_burstiness() to find the burstiness of codes in a time-series.
 #' @param <ts> character (or logicial) vector
 #' @param <min_iet> minimum interevent sequence spacing
 #' @keywords burstiness
+#' @description This function returns the burstiness coefficient for each of the
+#' unique codes in a series. The series must be event-based; see
+#' time_burstiness() to find the burstiness of codes in a time-series.
 #' @export
+#' @references Kim, E.-K., & Jo, H.-H. (2016). Measuring burstiness for finite
+#' event sequences. Physical Review E, 94(3), 032311.
+#' https://doi.org/10.1103/PhysRevE.94.032311
 #' @examples
 #' event_burstiness(guastello, 1)
 #' event_burstiness(guastello)
@@ -106,15 +109,19 @@ event_burstiness <- function(ts,
 
 
 #' time_burstiness
-#'
-#' This function returns the burstiness coefficient for a series of events.
-#' The series must be time-based; see event_burstiness() to find the
-#' burstiness of codes in a event-series.
-#' @param <ts> series of numeric times of events
-#' @param <min_iet> minimum interevent time
+#' @param <ts> numeric vector
+#' @param <min_iet> minimum interevent sequence spacing
 #' @keywords burstiness
+#' @description This function returns the burstiness coefficient for a series
+#' of events. The series must be time-based; see event_burstiness() to find
+#' the burstiness of codes in a event-series.
 #' @export
+#' @references Kim, E.-K., & Jo, H.-H. (2016). Measuring burstiness for finite
+#' event sequences. Physical Review E, 94(3), 032311.
+#' https://doi.org/10.1103/PhysRevE.94.032311
 #' @examples
+#' event_burstiness(guastello, 1)
+#' event_burstiness(guastello)
 #' time_burstiness()
 #'
 time_burstiness <- function(times,
@@ -189,10 +196,19 @@ time_burstiness <- function(times,
 
 #' orbde
 #'
-#' This function returns the result of orbital decomposition. All of the
-#' metrics associated with orbital decomposition are returned in a list.
 #' @param <data_seq> character or integer time series
 #' @keywords orbital decomposition
+#' @description This function returns the result of orbital decomposition.
+#' All of the metrics associated with orbital decomposition are returned in a
+#' matrix with named columns.
+#' @references Guastello, S. J. (n.d.). Orbital Decomposition: Identification
+#' of Dynamical Patterns in Categorical Data. In S. J. Guastello & R. A. M.
+#' Gregson (Eds.), Nonlinear Dynamical Systems Analysis for the Behavioral
+#' Sciences Using Real Data (pp. 499–516). CRC Press.
+#' Guastello, S. J., Hyde, T., & Odak, M. (1998). Symbolic dynamic patterns of
+#' verbal exchange in a creative problem solving group. Nonlinear Dynamics,
+#' Psychology, and Life Sciences, 2(1), 35–58.
+
 #' @export
 #' @examples
 #' orbde(guastello)
@@ -415,17 +431,19 @@ orbde <- function(data_seq) {
 
 #' IPL_fit
 #'
-#' This function returns the burstiness coefficient for each of the
-#' unique codes in the time series.
-#' @param <ts> character time series
-#' @keywords burstiness
+#' @param <ts> character vector
+#' @keywords power-law
+#' @description This function computes a power-law distribution fit to
 #' @export
 #' @examples
+#' @references Clauset, A., Shalizi, C. R., & Newman, M. E. J. (2009).
+#' Power-law distributions in empirical data. SIAM Review, 51(4), 661–703.
+#' https://doi.org/10.1137/070710111
 #' IPL_fit(guastello, C)
 #'
 IPL_fit <- function(ts,       # data sequence
                     C = 1) {  # subsequences length
-  # (from orbital decomposition, perhaps)
+                              # (from orbital decomposition, perhaps)
   # Create the subsequences
   require(igraph)
   length(ts) - C + 1 -> len
@@ -447,8 +465,8 @@ IPL_fit <- function(ts,       # data sequence
     # Fit the data with a power law
     igraph::fit_power_law(unname(freqs)) ->
       fit_ls
-    fit_ls[[2]] -> Shape
-    fit_ls[[6]] -> Fit
+#    fit_ls[[2]] -> Shape
+#    fit_ls[[6]] -> Fit
 
   }
   return(fit_ls)
@@ -500,11 +518,22 @@ makeMarkov <- function(ts) {   # category vector
 #'
 #' This function returns a numeric sequence corresponding to a text
 #' file, suitable for RQA use.
-#' @param <x> text file name
+#' @param <obs_adj_mat> observed adjacency matrix
+#' @param <obs_node_freq> observed node frequencies
+#' @param <directed> is the network directed (TRUE) or not (FALSE)
+#' @param <loops> are there self-loops in the matrix?
+#' @param <ci> confidence interval level
+#' @param <R> number of replications
 #' @keywords clean text
+#' @description This function returns a matrix of the same dimension as
+#' obs_adj_mat, with values of {-1,0,1}. Values of -1 (+1) indicate that the
+#' corresponding entry in obs_adj_mat has an entry that is less (more) than
+#' would be expected by the observed node frequencies and outside the
+#' bootstrapped confidence interval matrix created from the observed node
+#' frequencies.
 #' @export
 #' @examples
-#' bootMarkov(ts)
+#' bootMarkov()
 #'
 bootMarkov <- function(obs_adj_mat,       # Observed adjacency matrix
                        obs_node_freq,     # Observed node frequencies
