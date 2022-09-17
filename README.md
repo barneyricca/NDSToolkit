@@ -12,3 +12,5 @@ This package also contains a number of datasets
 - Sample categorical sequence from Guastello (2011)
 
 There are several additional functions planned (as of 2 June 2022), including some bootstrap confidence intervals for most of the above metrics, etc.
+
+Note to self: devtools::document() to create help pages from R file.

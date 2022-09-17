@@ -4,17 +4,37 @@
 \alias{IPL_fit}
 \title{IPL_fit}
 \usage{
-IPL_fit(ts, C = 1)
+IPL_fit(
+ts,
+C = 1)
 }
 \arguments{
-\item{<ts>}{character time series}
+\item{<ts>}{time-ordered character vector
+<C> length of the longest significantly recurring subsequence}
+}
+\value{
+
 }
 \description{
-This function returns the burstiness coefficient for each of the
-unique codes in the time series.
+This function computes a power-law distribution fit to the
+distribution of codes in the time series. It uses the function
+igraph::fit_power_law() to compute the fit, and returns the same
+values as that function.
+}
+\details{
+IPL_fit does not require that _ts_ be of class _time series_, only
+that the sequence be temporally ordered.
 }
 \examples{
 IPL_fit(guastello, C)
 
 }
-\keyword{burstiness}
+\references{
+Clauset, A., Shalizi, C. R., & Newman, M. E. J. (2009).
+Power-law distributions in empirical data. SIAM Review, 51(4), 661–703.
+https://doi.org/10.1137/070710111
+}
+\author{
+Bernard P. Ricca bricca@uccs.edu
+}
+\keyword{power-law}

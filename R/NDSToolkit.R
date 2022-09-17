@@ -1,3 +1,22 @@
+#' auto_crqa
+#'
+#' @param <ts> character (or logicial) vector
+#' @keywords
+#' @description This function computes the CRQA of the time series, based on
+#' the embedding method (pecora, takens_ami, takens_fnn)
+#' @export
+#' @author Bernard P. Ricca bricca@uccs.edu
+#' @references
+#' @examples
+#' auto_crqa(guastello)
+#'
+auto_crqa <- function(ts1,
+                      ts2 = NULL,
+                      embed_method,
+                      plot = FALSE) {
+
+}
+
 #' event_burstiness
 #'
 #' @param <ts> character (or logicial) vector
@@ -7,6 +26,7 @@
 #' unique codes in a series. The series must be event-based; see
 #' time_burstiness() to find the burstiness of codes in a time-series.
 #' @export
+#' @author Bernard P. Ricca bricca@uccs.edu
 #' @references Kim, E.-K., & Jo, H.-H. (2016). Measuring burstiness for finite
 #' event sequences. Physical Review E, 94(3), 032311.
 #' https://doi.org/10.1103/PhysRevE.94.032311
@@ -14,10 +34,13 @@
 #' event_burstiness(guastello, 1)
 #' event_burstiness(guastello)
 #'
-event_burstiness <- function(ts,
-                             min_iet = NULL) {
+event_burstiness <- function(ts,                 # vector of code sequence
+                             min_iet = NULL) {   # minimum inter-event time
   # Takes a sequence of logical or character entries, and returns
   #  the Kim & Jo (2016) burstiness for each of the unique entries
+  # For contextual burstiness, the minimum IET is 2. (I.e., the code must
+  #  change and change back.) For collective burstiness, the minimum IET
+  #  should be 1, but that doesn't seem to be the norm yet.
 
   if(is.character(ts) == FALSE &         # Validate sequence
      is.logical(ts) == FALSE) {
@@ -107,7 +130,6 @@ event_burstiness <- function(ts,
   return(NULL)
 }
 
-
 #' time_burstiness
 #' @param <ts> numeric vector
 #' @param <min_iet> minimum interevent sequence spacing
@@ -116,6 +138,7 @@ event_burstiness <- function(ts,
 #' of events. The series must be time-based; see event_burstiness() to find
 #' the burstiness of codes in a event-series.
 #' @export
+#' @author Bernard P. Ricca bricca@uccs.edu
 #' @references Kim, E.-K., & Jo, H.-H. (2016). Measuring burstiness for finite
 #' event sequences. Physical Review E, 94(3), 032311.
 #' https://doi.org/10.1103/PhysRevE.94.032311
@@ -124,8 +147,8 @@ event_burstiness <- function(ts,
 #' event_burstiness(guastello)
 #' time_burstiness()
 #'
-time_burstiness <- function(times,
-                            min_iet = NULL) {
+time_burstiness <- function(times,             # Vector of event times
+                            min_iet = NULL) {  # minimum inter-event time
   # Takes a vector of times and computes a burstiness coefficient.
   # Uses Kim & Jo (2016) burstiness calculation.
   if(is.numeric(ts) == FALSE) {         # Validate sequence
@@ -201,6 +224,7 @@ time_burstiness <- function(times,
 #' @description This function returns the result of orbital decomposition.
 #' All of the metrics associated with orbital decomposition are returned in a
 #' matrix with named columns.
+#' @author Bernard P. Ricca bricca@uccs.edu
 #' @references Guastello, S. J. (n.d.). Orbital Decomposition: Identification
 #' of Dynamical Patterns in Categorical Data. In S. J. Guastello & R. A. M.
 #' Gregson (Eds.), Nonlinear Dynamical Systems Analysis for the Behavioral
@@ -429,17 +453,75 @@ orbde <- function(data_seq) {
   return(OD_tab)
 }
 
-#' IPL_fit
+
+#' embed_pecora
 #'
-#' @param <ts> character vector
 #' @keywords power-law
-#' @description This function computes a power-law distribution fit to
-#' @export
-#' @examples
+#' @description This function computes a power-law distribution fit to the
+#' distribution of codes in the time series. It uses the function
+#' igraph::fit_power_law() to compute the fit, and returns the same
+#' values as that function.
+#' @usage IPL_fit(
+#' ts,
+#' C = 1)
+#' @param <ts> time-ordered character vector
+#' @param <C> length of the longest significantly recurring subsequence
+#' (see Details)
+#' @details IPL_fit does not require that _ts_ be of class _time series_, only
+#' that the sequence be temporally ordered.
+#'
+#' After creating a vector of all the subsequences of length C, IPL_fit
+#' creates a frequency table of those subsequences and then uses
+#' igraph::power_law_fit() with default parameters to determine the
+#' exponent of the fitted power-law distribution along with other
+#' parameters. (See igraph::power_law_fit() for a full description.) The
+#' returns
+#'
+#' Although other approaches are possible, it is recommended that C be
+#' determined through orbital decomposition.
+#' @returns
+#' @author Bernard P. Ricca bricca@uccs.edu
 #' @references Clauset, A., Shalizi, C. R., & Newman, M. E. J. (2009).
 #' Power-law distributions in empirical data. SIAM Review, 51(4), 661–703.
 #' https://doi.org/10.1137/070710111
-#' IPL_fit(guastello, C)
+#' @examples IPL_fit(guastello, C)
+#'
+
+embed_pecora <- function(data_seq) {
+
+}
+
+#' IPL_fit
+#'
+#' @keywords power-law
+#' @description This function computes a power-law distribution fit to the
+#' distribution of codes in the time series. It uses the function
+#' igraph::fit_power_law() to compute the fit, and returns the same
+#' values as that function.
+#' @usage IPL_fit(
+#' ts,
+#' C = 1)
+#' @param <ts> time-ordered character vector
+#' @param <C> length of the longest significantly recurring subsequence
+#' (see Details)
+#' @details IPL_fit does not require that _ts_ be of class _time series_, only
+#' that the sequence be temporally ordered.
+#'
+#' After creating a vector of all the subsequences of length C, IPL_fit
+#' creates a frequency table of those subsequences and then uses
+#' igraph::power_law_fit() with default parameters to determine the
+#' exponent of the fitted power-law distribution along with other
+#' parameters. (See igraph::power_law_fit() for a full description.) The
+#' returns
+#'
+#' Although other approaches are possible, it is recommended that C be
+#' determined through orbital decomposition.
+#' @returns
+#' @author Bernard P. Ricca bricca@uccs.edu
+#' @references Clauset, A., Shalizi, C. R., & Newman, M. E. J. (2009).
+#' Power-law distributions in empirical data. SIAM Review, 51(4), 661–703.
+#' https://doi.org/10.1137/070710111
+#' @examples IPL_fit(guastello, C)
 #'
 IPL_fit <- function(ts,       # data sequence
                     C = 1) {  # subsequences length
@@ -478,7 +560,6 @@ IPL_fit <- function(ts,       # data sequence
 #' file, suitable for RQA use.
 #' @param <x> text file name
 #' @keywords clean text
-#' @export
 #' @examples
 #' makeMarkov(ts)
 #'
@@ -527,11 +608,11 @@ makeMarkov <- function(ts) {   # category vector
 #' @keywords clean text
 #' @description This function returns a matrix of the same dimension as
 #' obs_adj_mat, with values of {-1,0,1}. Values of -1 (+1) indicate that the
-#' corresponding entry in obs_adj_mat has an entry that is less (more) than
-#' would be expected by the observed node frequencies and outside the
-#' bootstrapped confidence interval matrix created from the observed node
-#' frequencies.
-#' @export
+#' corresponding entry in obs_adj_mat has an entry that is less (more,
+#' respectively) than would be expected by the observed node frequencies and
+#' outside the bootstrapped confidence interval matrix created from the
+#' observed node frequencies.
+#' @author Bernard P. Ricca bricca@uccs.edu
 #' @examples
 #' bootMarkov()
 #'
@@ -604,6 +685,7 @@ bootMarkov <- function(obs_adj_mat,       # Observed adjacency matrix
 #' @param <x> text file name
 #' @keywords clean text
 #' @export
+#' @author Bernard P. Ricca bricca@uccs.edu
 #' @examples
 #' SSG(ts)
 #'
@@ -695,50 +777,76 @@ SSG <- function(ts1,              # time series
   return(NULL)
 }
 
-#' SSG_metrics
+#' prepareText
 #'
-#' This function returns a numeric sequence corresponding to a text
-#' file, suitable for RQA use.
+#' This function cleans text data for use in RQA.
 #' @param <x> text file name
 #' @keywords clean text
 #' @export
+#' @author Bernard P. Ricca bricca@uccs.edu
 #' @examples
-#' SSG_metrics(ts)
+#' prepareText(letitbe)
 #'
-SSG_metrics <- function(ts1,             # time series
-                        ts2,             # time series 2
-                        times = NULL,    # ts times - not yet implemented
-                        cats1 = NULL,
-                        cats2 = NULL) {  # category vector
+prepareText <- function(x) {          # Text file to read
+  # ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+  #                                                               #
+  # This is a little helper function to clean up the text         #
+  #  from the lyrics and return a series of numbers.              #
+  #                                                               #
+  # You do NOT need to understand any of these details.           #
+  #  Original function courtesy of Aaron Likens                   #
+  #  Modified somewhat by BPR                                     #
+  #                                                               #
+  # ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+  require(readtext)                   # readtext()
+  require(tm)                         # Text manipulation functions
 
-  if(is.null(cats1) == TRUE) {          # Set up the axes labels
-    1:length(unique(ts1)) -> cat_num1
-    sort(unique(ts1)) -> names(cat_num1)
+  if(file.exists(x)) {                # Check for file existence
+    readtext(x)$text -> textIn        # Read the text
   } else {
-    1:length(cats1) -> cat_num1
-    cats1 -> names(cat_num1)
+    cat("Input file does not exist!\n")
+    return(NULL)
   }
 
-  if(is.null(cats2) == TRUE) {          # Set up the axes labels
-    1:length(unique(ts2)) -> cat_num2
-    sort(unique(ts2)) -> names(cat_num2)
-  } else {
-    1:length(cats2) -> cat_num2
-    cats2 -> names(cat_num2)
+  if(is.character(textIn) == FALSE) { # Validate textIn
+    cat("Data are not textual!\n")
+    return(NULL)
   }
 
-  cat_num1[ts1] -> seq_num1
-  cat_num2[ts2] -> seq_num2
+  gsub('\\n',' ', textIn) ->          # Get rid of the line breaks
+    rawText
+  gsub('\\r',' ', textIn) ->          # Get rid of any hard returns
+    rawText
+  Corpus(VectorSource(rawText)) ->    # Create a dictionary from the text.
+    ts
+  tm_map(ts, removePunctuation) ->    # Remove the punctuation
+    ts
+  tm_map(ts, removeNumbers) ->        # Remove numbers
+    ts
+  tm_map(ts, tolower) ->              # Make everything lower case
+    ts
+  tm_map(ts, stripWhitespace) ->      # Get rid of white spaces
+    ts
+  tm_map(ts, stemDocument) ->         # Reduce words to their stems
+    ts
+  tm_map(ts, PlainTextDocument) ->    # Make it all plain text
+    ts
+  as.character(ts[[1]]) ->            # Make words into string of numbers
+    ts
+  unlist(strsplit(ts, ' ')) ->        # Break each number into a separate
+    words                             #  entry.
+  unique(words) ->                    # Get a list of unique words
+    unique_words
 
-  jitter(ts1) -> jt1
-  jitter(ts2) -> jt2
-
-  if(is.null(times) == TRUE) {
-    plot(jt1, jt2,
-         pch = 16)
-    lines(jt1, jt2)
-  }
-
-
+  # Derive a an ordered sequence that characterizes words in terms of their
+  #  order of appearance. Duplicates retain the same number:
+  as.vector(                          # Need a vector, not a list
+    sapply(words,                     # Apply to every word
+           function(x) {
+             which(x == unique_words) # Which unique word is x?
+           }
+    )) -> word_series                 # Make these into a series
+  return(word_series)
 }
+
 

@@ -1,1 +1,3 @@
 exportPattern("^[[:alpha:]]+")
+importFrom("graphics", "axis", "grid", "lines")
+importFrom("stats", "dchisq", "quantile", "sd", "ts")

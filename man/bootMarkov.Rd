@@ -29,10 +29,10 @@ bootMarkov(
 \description{
 This function returns a matrix of the same dimension as
 obs_adj_mat, with values of {-1,0,1}. Values of -1 (+1) indicate that the
-corresponding entry in obs_adj_mat has an entry that is less (more) than
-would be expected by the observed node frequencies and outside the
-bootstrapped confidence interval matrix created from the observed node
-frequencies.
+corresponding entry in obs_adj_mat has an entry that is less (more,
+respectively) than would be expected by the observed node frequencies and
+outside the bootstrapped confidence interval matrix created from the
+observed node frequencies.
 }
 \details{
 This function returns a numeric sequence corresponding to a text
