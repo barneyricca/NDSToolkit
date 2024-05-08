@@ -183,7 +183,7 @@ time_burstiness <- function(times,             # Vector of event times
   if(is.null(min_iet) == FALSE) {            # Minimum inter-event time
     if(min_iet %% 1 == 0) {                  # Must be an integer!
       if(min_iet >= 1) {                     # Must be a positive integer!
-        min_iet / length(ts) ->              # For K & J, eq. 28
+        min_iet / length(times) ->           # For K & J, eq. 28
           y_tilde
         diff(ts, 1) ->                       # Interevent times
           iet_vec
