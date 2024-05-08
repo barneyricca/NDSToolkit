@@ -151,20 +151,20 @@ time_burstiness <- function(times,             # Vector of event times
                             min_iet = NULL) {  # minimum inter-event time
   # Takes a vector of times and computes a burstiness coefficient.
   # Uses Kim & Jo (2016) burstiness calculation.
-  if(is.numeric(ts) == FALSE) {         # Validate sequence
+  if(is.numeric(times) == FALSE) {        # Validate sequence
     cat("Invalid sequence type passed to time_burstiness().\n")
     cat("Did you mean to use event_burstiness()?\n")
     return(NULL)
   }
 
-  if(length(ts) == 0) {                  # If ts has no entries
+  if(length(times) == 0) {                # If ts has no entries
     cat("Empty sequence.\n")
     return(NULL)
   }
 
   if(is.null(min_iet) == TRUE) {         # Use Kim & Jo, eqn. 22
     # No minimum inter-event time.
-    diff(ts, 1) ->                       # Interevent times
+    diff(times, 1) ->                    # Interevent times
       iet_vec
     mean(iet_vec, na.rm = TRUE) ->       # mean(interevent times)
       mean_iet
